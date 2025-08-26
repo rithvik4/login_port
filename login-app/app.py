@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import mysql.connector
+import mysql.connector 
 
 app = Flask(__name__)
 
@@ -7,8 +7,8 @@ app = Flask(__name__)
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Brithvik/1",   # ⚠️ better to keep in config/env later
-    database="user_details"
+    password="Varun@1505",   # ⚠️ better to keep in config/env later
+    database="user_detail"
 )
 
 @app.route("/")
