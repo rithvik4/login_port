@@ -41,7 +41,7 @@ body {
 }
 
 .success {
-    color: green;
+    color: rgb(255, 0, 140);
 }
 
 .danger {
