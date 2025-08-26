@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import mysql.connector
+import mysql.connector 
 
 app = Flask(__name__)
 
@@ -33,7 +33,7 @@ def login():
 
 @app.route("/welcome")
 def welcome():
-    return "<h1>Welcome! 🎉 You have logged in successfully </h1>"
+    return "<h1>Welcome! 🎉 🎉 🎉 🎉 🎉 You have logged in successfully 🎉 🎉 🎉 🎉 🎉 </h1>"
 
 if __name__ == "__main__":
     print("➡️ Starting Flask server with DB connection...")

@@ -8,8 +8,8 @@ body {
 }
 
 .login-box {
-    background: #6b6969;
-    padding: 30px;
+    background: #884e4e;
+    padding: 50px;
     border-radius: 12px;
     box-shadow: 0 0 10px #aaa;
     text-align: center;
@@ -41,7 +41,7 @@ body {
 }
 
 .success {
-    color: green;
+    color: rgb(255, 0, 140);
 }
 
 .danger {
