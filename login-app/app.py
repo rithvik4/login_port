@@ -36,7 +36,7 @@ def signup():
 
     cursor = db.cursor()
     try:
-        cursor.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, hashed_password))
+        cursor.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
         db.commit()
         return jsonify({"success": True, "message": "Account created successfully!"})
     except mysql.connector.IntegrityError:
