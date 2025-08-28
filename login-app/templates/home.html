@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background: #007bff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .navbar .tabs a {
+            margin: 0 12px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar .tabs a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box" style="width: 80%; max-width: 800px;">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="logo">Hi, {{ email }}</div>
+            <div class="tabs">
+                <a onclick="showTab('home')">Home</a>
+                <a onclick="showTab('profile')">Profile</a>
+                <a onclick="showTab('settings')">Settings</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="home" class="content">
+            <h2>🏠 Home</h2>
+            <p>Welcome to your dashboard! Explore the tabs above.</p>
+        </div>
+
+        <div id="profile" class="content hidden">
+            <h2>👤 Profile</h2>
+            <p>Email: <b>{{ email }}</b></p>
+            <p>This is your profile section.</p>
+        </div>
+
+        <div id="settings" class="content hidden">
+            <h2>⚙️ Settings</h2>
+            <p>Here you can manage your preferences.</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll(".content").forEach(el => el.classList.add("hidden"));
+            document.getElementById(tabId).classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

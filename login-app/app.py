@@ -13,6 +13,7 @@ db = mysql.connector.connect(
     database="login_system"
 )
 
+
 @app.route("/")
 def home():
     if "user" in session:
@@ -61,8 +62,9 @@ def login():
 @app.route("/welcome")
 def welcome():
     if "user" in session:
-        return render_template("welcome.html", email=session["user"])
+        return render_template("home.html", email=session["user"])
     return redirect(url_for("home"))
+
 
 @app.route("/logout")
 def logout():
