@@ -1,16 +1,16 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
-import mysql.connector as mysql
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"   # Change this in production
+app.secret_key = "your_secret_key"
 
-# ✅ Database connection
-db = mysql.connect(
+# Database connection
+db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="Brithvik/1",  # ⚠️ keep secure in env later
-    database="user_details"
+    user="root",         # your MySQL username
+    password="Brithvik/1",  # your MySQL password
+    database="login_system"
 )
 
 @app.route("/")
@@ -19,7 +19,29 @@ def home():
         return redirect(url_for("welcome"))
     return render_template("login.html")
 
-# ✅ User Login
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"success": False, "message": "Missing email or password"})
+
+    hashed_password = generate_password_hash(password)
+
+    cursor = db.cursor()
+    try:
+        cursor.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, hashed_password))
+        db.commit()
+        return jsonify({"success": True, "message": "Account created successfully!"})
+    except mysql.connector.IntegrityError:
+        return jsonify({"success": False, "message": "Email already exists!"})
+
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -27,53 +49,25 @@ def login():
     password = data.get("password")
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM details WHERE email=%s", (email,))
+    cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
     user = cursor.fetchone()
-    cursor.close()
 
     if user and check_password_hash(user["password"], password):
         session["user"] = user["email"]
-        return jsonify({"success": True, "message": "✅ Login successful!"})
+        return jsonify({"success": True, "message": "Login successful!"})
     else:
-        return jsonify({"success": False, "message": "❌ Invalid email or password"})
+        return jsonify({"success": False, "message": "Invalid email or password"})
 
-# ✅ Signup Page
-@app.route("/signup", methods=["GET", "POST"])
-def signup():
-    if request.method == "POST":
-        data = request.get_json()
-        email = data.get("email")
-        password = data.get("password")
-
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM details WHERE email=%s", (email,))
-        exists = cursor.fetchone()
-
-        if exists:
-            cursor.close()
-            return jsonify({"success": False, "message": "⚠️ Email already registered"})
-
-        hashed_pwd = generate_password_hash(password)
-        cursor.execute("INSERT INTO details (email, password) VALUES (%s, %s)", (email, hashed_pwd))
-        db.commit()
-        cursor.close()
-        return jsonify({"success": True, "message": "🎉 Registration successful! Please login."})
-
-    return render_template("signup.html")
-
-# ✅ Welcome Page
 @app.route("/welcome")
 def welcome():
-    if "user" not in session:
-        return redirect(url_for("home"))
-    return render_template("welcome.html", user=session["user"])
+    if "user" in session:
+        return render_template("welcome.html", email=session["user"])
+    return redirect(url_for("home"))
 
-# ✅ Logout
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect(url_for("home"))
 
 if __name__ == "__main__":
-    print("➡️ Starting Flask server with DB connection...")
     app.run(debug=True)
